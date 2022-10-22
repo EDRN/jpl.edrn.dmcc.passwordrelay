@@ -14,6 +14,10 @@ class PasswordVerificationHandler(socketserver.StreamRequestHandler):
     '''
     def handle(self):
         uid, password = self.rfile.readline().decode('utf-8').strip(), self.rfile.readline().decode('utf-8').strip()
+        # User IDs are full LDAP Distinguished Names (DNs) of the form
+        #     uid=USERNAME,dc=edrn,dc=jpl,dc=nasa,dc=gov
+        # so strip off all but the USERNAME
+        uid = uid[4:uid.index(',')]
         status = validate_password(uid, password)
         rc = 1 if status == PasswordStatus.VALID else 0
         _logger.info('For username %s the password was %s so sending back %d', uid, status, rc)
