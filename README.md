@@ -55,7 +55,7 @@ Then make a `supervisord.conf` similar to the following:
     file = %(here)s/var/sockets/supervisor
 
     [supervisorctl]
-    serverurl = unix:%(here)s/var/sockets/supervisor
+    serverurl = unix://%(here)s/var/sockets/supervisor
 
     [program:passwordrelay]
     command = %(here)s/.venv/bin/dmcc-passwordrelay --socket %(here)s/var/sockets/dmcc
