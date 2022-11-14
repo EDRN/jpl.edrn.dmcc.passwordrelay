@@ -7,7 +7,7 @@ from . import VERSION
 from .constants import DEFAULT_SOCKET
 from .server import PasswordVerificationHandler
 from .utils import add_logging_arguments
-import os, argparse, logging, socketserver
+import os, argparse, logging, socketserver, stat
 
 _logger = logging.getLogger(__name__)
 __version__ = VERSION
@@ -32,6 +32,7 @@ def main():
     os.makedirs(os.path.dirname(socket_path), exist_ok=True)
     _logger.info('Starting DMCC Relay Server listening on %s', socket_path)
     with socketserver.UnixStreamServer(socket_path, PasswordVerificationHandler) as server:
+        os.chmod(socket_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
         server.serve_forever()
 
 

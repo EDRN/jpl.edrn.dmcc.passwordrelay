@@ -27,9 +27,11 @@ By default, the server creates its listening socket in `/tmp/dmcc.socket`. You c
 
 You can see if it's working correctly by running the following from another session:
 
-    printf 'USERNAME\PASSWORD\n' | nc -U /tmp/dmcc.socket | more
+    printf 'USERNAME\nPASSWORD\n' | nc -U /tmp/dmcc.socket | more
 
 Replace `USERNAME` and `PASSWORD` and the socket path if necessary. You'll see a `1` for a valid password, or `0` for invalid.
+
+👉 **Note:** No `nc -U` on your system? Try installing `netcat-openbsd` for it; or use `socat` instead.
 
 
 ### 😈 Daemonizing
