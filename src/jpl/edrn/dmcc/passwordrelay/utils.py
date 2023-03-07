@@ -7,13 +7,13 @@ the default ``DMCC_SOAP_URL``.
 '''
 
 from .constants import DMCC_SOAP_URL, DIM_VALIDATION_TOKEN
-from zeep import Client
+from zeep import Client, Settings
 from zeep.cache import InMemoryCache
 from zeep.transports import Transport
 import logging, argparse, enum, sys
 
 _logger = logging.getLogger(__name__)
-_transport = Transport(InMemoryCache())
+_cache = InMemoryCache()
 
 
 class PasswordStatus(enum.Enum):
@@ -38,19 +38,25 @@ def add_logging_arguments(parser: argparse.ArgumentParser):
 
 def validate_password(username: str, password: str) -> PasswordStatus:
     '''Check if the ``username`` is credentialed by the ``password`` against the DMCC SOAP service.'''
-    _logger.debug('Creating SOAP client to %s', DMCC_SOAP_URL)
-    client = Client(DMCC_SOAP_URL, transport=_transport)
-    _logger.debug('Calling ``pwdVerification`` with username %s', username)
-    response = client.service.pwdVerification(username, password, DIM_VALIDATION_TOKEN)
-    if response == 'valid':
-        _logger.debug('Password for %s is valid', username)
-        return PasswordStatus.VALID
-    elif response == 'expired':
-        _logger.debug('Password for %s expired', username)
-        return PasswordStatus.EXPIRED
-    else:
-        _logger.debug('Password for %s is invalid', username)
-        return PasswordStatus.INVALID
+    _logger.debug('Creating SOAP client')
+    transport = Transport(cache=_cache, operation_timeout=5, timeout=10)
+    client = Client(DMCC_SOAP_URL, transport=transport, settings=Settings(xml_huge_tree=True, strict=False))
+    try:
+        _logger.debug('Calling ``pwdVerification`` with username %s', username)
+        response = client.service.pwdVerification(username, password, DIM_VALIDATION_TOKEN)
+        if response == 'valid':
+            _logger.debug('Password for %s is valid', username)
+            return PasswordStatus.VALID
+        elif response == 'expired':
+            _logger.debug('Password for %s expired', username)
+            return PasswordStatus.EXPIRED
+        else:
+            _logger.debug('Password for %s is invalid', username)
+            return PasswordStatus.INVALID
+    finally:
+        _logger.debug('Deleting SOAP client')
+        del client
+        del transport
 
 
 if __name__ == '__main__':

@@ -10,4 +10,4 @@ DMCC_SOAP_URL = 'https://www.compass.fhcrc.org/edrn_ws/ws_newcompass.asmx?WSDL'
 DEFAULT_SOCKET = '/tmp/dmcc.socket'
 
 # The vapid validation token that serves no purpose
-DIM_VALIDATION_TOKEN = '0' * 4096
+DIM_VALIDATION_TOKEN = '0'

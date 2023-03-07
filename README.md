@@ -60,6 +60,8 @@ Then make a `supervisord.conf` similar to the following:
     [program:passwordrelay]
     command = %(here)s/.venv/bin/dmcc-passwordrelay --socket %(here)s/var/sockets/dmcc
     autorestart = true
+    redirect_stderr = true
+    stdout_logfile = %(here)s/var/log/relay.log
 
 
 ## 🔧 Development
