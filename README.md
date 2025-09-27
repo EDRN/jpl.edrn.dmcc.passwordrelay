@@ -1,10 +1,10 @@
 # 🏃 JPL EDRN DMCC Password Relay
 
-This package provides a simple, safe server that listens for usernames and password for the [Early Detection Research Network](https://edrn.nci.nih.gov/)'s Data Management and Coordinating Center's so-called "secure site". It uses the center's antique [SOAP](http://keithba.net/simplicity-and-utility-or-why-soap-lost) service to check those passwords, then gives back a single byte response indicating if the password's valid.
+This package provides a simple, safe server that listens for usernames and password for the [Early Detection Research Network](https://edrn.nci.nih.gov/)'s Data Management and Coordinating Center's so-called "secure site". It uses the center's [SOAP](http://keithba.net/simplicity-and-utility-or-why-soap-lost) service to check those passwords, then gives back a single byte response indicating if the password's valid.
 
 It's intended to be used with [dmccauth](https://github.com/EDRN/dmccauth), an [overlay](https://www.openldap.org/doc/admin26/overlays.html) to [OpenLDAP](https://www.openldap.org/)'s standalone [slapd](https://www.openldap.org/doc/admin26/intro.html#What%20is%20slapd%20and%20what%20can%20it%20do) server. OpenLDAP overlays must be programmed in C and use dynamically-loaded objects, but [SOAP implementations for C](https://www.genivia.com/products.html#gsoap) are available only as static APIs.
 
-With this running alongside OpenLDAP and the `dmccauth` overlay, we can overcome this problem.
+With this running alongside OpenLDAP and the `dmccauth` overlay, we can overcome this challenge.
 
 
 ## 💽 Installation
